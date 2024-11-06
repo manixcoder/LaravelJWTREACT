@@ -1,9 +1,17 @@
 import React, { useState } from 'react'
-import AuthUser from './AuthUser'
+import AuthUser from './AuthUser';
+import axios from 'axios';
 
 const Login = () => {
 
     const { http } = AuthUser();
+
+    const apiClient=axios.create({
+        baseURL:"http://localhost:8000",
+        headers:{
+            'Authorization':"Bearer token"
+        }
+    });
 
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -14,7 +22,7 @@ const Login = () => {
 
         
         try {
-            const response = await http.post('/login', { email, password });
+            const response = await apiClient.post('/api/login', { email, password });
             console.log(response.data);
         } catch (error) {
             console.error('Error during API call:', error);

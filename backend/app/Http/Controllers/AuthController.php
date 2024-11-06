@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UsersRegisterRequest;
+use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -16,6 +20,24 @@ class AuthController extends Controller
     // {
     //     $this->middleware('auth:api', ['except' => ['login']]);
     // }
+   // public function registration(UsersRegisterRequest $request){
+    public function registration(Request $request){
+        //$validatedData=$request->validate();
+        // $validatedData = $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'email' => 'required|string|email|unique:users|max:255',
+        //     'password' => 'required|string|min:6|confirmed'
+        // ]);
+
+        $user=User::create([
+            'name'=>$request['name'],
+            'email'=>$request['email'],
+            'password'=>bcrypt($request['password'])
+        ]);
+
+        $token= auth()->login($user);
+        return $this->respondWithToken($token);
+    }
 
     /**
      * Get a JWT via given credentials.
@@ -26,7 +48,7 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth('api')->attempt($credentials)) {
+        if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
