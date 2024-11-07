@@ -28,15 +28,29 @@ class AuthController extends Controller
         //     'email' => 'required|string|email|unique:users|max:255',
         //     'password' => 'required|string|min:6|confirmed'
         // ]);
-
-        $user=User::create([
-            'name'=>$request['name'],
-            'email'=>$request['email'],
-            'password'=>bcrypt($request['password'])
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:6|confirmed'
         ]);
 
-        $token= auth()->login($user);
-        return $this->respondWithToken($token);
+        if($validator->fails()){
+            return response()->json([
+                'error' => true,
+                'message' => $validator->errors()
+            ]);
+        }else{
+            $user=User::create([
+                'name'=>$request['name'],
+                'email'=>$request['email'],
+                'password'=>bcrypt($request['password'])
+            ]);
+    
+            $token= auth()->login($user);
+            return $this->respondWithToken($token);
+        }
+
+        
     }
 
     /**
@@ -48,7 +62,7 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (! $token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
