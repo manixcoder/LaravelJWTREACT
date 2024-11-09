@@ -3,6 +3,7 @@ import { Routes, Route, Link } from 'react-router-dom'
 import Home from "./Components/Home";
 import Login from "./Components/Login";
 import Dashboard from "./Components/Dashboard";
+import Registration from "./Components/Registration";
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
               <Link className="nav-link" to="/login">login</Link>
             </li>
             <li className="nav-item">
+              <Link className="nav-link" to="/registration">Registration</Link>
+            </li>
+            <li className="nav-item">
               <Link className="nav-link" to="/dashboard">Dashboard</Link>
             </li>
           </ul>
@@ -31,6 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
+          <Route path="/registration" element={<Registration />}></Route>
           <Route path="/dashboard" element={<Dashboard />}></Route>
 
         </Routes>
