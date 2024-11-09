@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
-import AuthUser from './AuthUser';
+import React, { useState } from 'react'
+import AuthUser from './AuthUser'
 
 const Login = () => {
     const { http, setToken } = AuthUser();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
 
     const submitForm = async () => {
+        //console.log(email + " " + password);
+        //api call 
+
+        
         try {
-            const response = await http.post('/api/login', { email, password });
-            const { user, access_token } = response.data;
-            setToken(user, access_token);
+            const response = await http.post('/login', { email, password });
+            console.log(response.data);
         } catch (error) {
             console.error('Error during API call:', error);
             setError('Invalid email or password. Please try again.');
