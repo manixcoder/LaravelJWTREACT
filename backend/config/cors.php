@@ -15,11 +15,7 @@ return [
     |
     */
 
-<<<<<<< HEAD
     'paths' => ['api/*', 'login','logout','*'],
-=======
-    'paths' => ['api/*', 'login', 'logout', '*'],
->>>>>>> 80937b8deb5cd0b76f623d50376a2e5867f5243e
 
     'allowed_methods' => ['*'],
 
