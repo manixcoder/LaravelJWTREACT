@@ -26,6 +26,11 @@ export default function AuthUser() {
         navigate('/dashboard');
     };
 
+    const logout = ()=>{
+        sessionStorage.clear();
+        navigate('/login');
+    }
+
     const http = axios.create({
         baseURL: "http://localhost:8000",
     });
@@ -45,5 +50,6 @@ export default function AuthUser() {
         user,
         getToken,
         http,
+        logout
     };
 }

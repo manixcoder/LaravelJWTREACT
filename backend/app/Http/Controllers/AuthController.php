@@ -16,10 +16,10 @@ class AuthController extends Controller
      *
      * @return void
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:api', ['except' => ['login']]);
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login','registration']]);
+    }
    // public function registration(UsersRegisterRequest $request){
     public function registration(Request $request){
         //$validatedData=$request->validate();
@@ -28,18 +28,19 @@ class AuthController extends Controller
         //     'email' => 'required|string|email|unique:users|max:255',
         //     'password' => 'required|string|min:6|confirmed'
         // ]);
-        // $validator = Validator::make($request->all(), [
-        //     'name' => 'required|string|max:255',
-        //     'email' => 'required|string|email|unique:users|max:255',
-        //     'password' => 'required|string|min:6|confirmed'
-        // ]);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:6|confirmed'
+        ]);
 
-        // if($validator->fails()){
-        //     return response()->json([
-        //         'error' => true,
-        //         'message' => $validator->errors()
-        //     ]);
-        // }else{
+        if($validator->fails()){
+            return response()->json([
+                'error' => true,
+                'code'=>'401',
+                'message' => $validator->errors()
+            ]);
+        }else{
             $user=User::create([
                 'name'=>$request['name'],
                 'email'=>$request['email'],
@@ -48,7 +49,7 @@ class AuthController extends Controller
     
             $token= auth()->login($user);
             return $this->respondWithToken($token);
-       // }
+        }
 
         
     }
@@ -98,7 +99,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(auth('api')->refresh());
     }
 
     /**
@@ -111,9 +112,11 @@ class AuthController extends Controller
     protected function respondWithToken($token)
     {
         return response()->json([
+            'messege'=>"success",
+            'code'=>'200',
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'expires_in' => config('jwt.ttl') * 60, // Adjusted TTL
             'user'=>auth()->user()
         ]);
     }

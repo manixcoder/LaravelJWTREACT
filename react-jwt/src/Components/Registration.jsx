@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import AuthUser from './AuthUser';
 
 const Registration = () => {
+
     const { http, setToken } = AuthUser();
 
     const [name, setName] = useState('');
@@ -20,8 +21,14 @@ const Registration = () => {
 
         try {
             const response = await http.post('/api/registration', { name, email, password });
-            const { user, access_token } = response.data;
-            setToken(user, access_token);
+            console.log(response.data.code);
+            if (response.data.code !== 401) {
+                const { user, access_token } = response.data;
+                setToken(user, access_token);
+            } else {
+                setError('Something went wrong. Please try again.');
+            }
+
         } catch (error) {
             console.error('Error during API call:', error);
             setError('Something went wrong. Please try again.');
